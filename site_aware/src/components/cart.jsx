@@ -49,7 +49,7 @@ export default class Cart extends React.Component {
                         <p>Total: {this.state.total}</p>
                         <Link to='/guest'>Guest Checkout</Link> 
                         <Link to='/register'>Register and Checkout</Link>
-                        <Link tp='/login'>Or Login to Checkout</Link>
+                        {/* <Link to='/login'>Or Login to Checkout</Link> */}
                     </div>
                 : ''}
                 {cart.map((item, i) => (
