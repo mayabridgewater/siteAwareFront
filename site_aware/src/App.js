@@ -8,6 +8,7 @@ import {
 import Homepage from './components/homepage';
 import Cart from './components/cart';
 import GuestCheckout from './components/guestCheckout';
+import Register from './components/register';
 
 class App extends React.Component {
   constructor() {
@@ -44,6 +45,9 @@ class App extends React.Component {
           </Route>
           <Route path='/guest'>
             <GuestCheckout cart={this.state.cart}/>
+          </Route>
+          <Route path='/register'>
+            <Register cart={this.state.cart}/>
           </Route>
           <Route path='/'>
             <Homepage addToCart={this.addToCart} cartLength={this.state.cart.length}/>

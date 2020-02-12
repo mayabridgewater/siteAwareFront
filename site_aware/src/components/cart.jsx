@@ -7,7 +7,7 @@ export default class Cart extends React.Component {
         this.state = {
             edit: -1,
             total: '',
-            items: this.props.cart //id, quantity, weight, comment
+            items: this.props.cart
         }
     }
     componentDidMount() {
@@ -48,6 +48,8 @@ export default class Cart extends React.Component {
                     <div className='d-flex justify-content-around'>
                         <p>Total: {this.state.total}</p>
                         <Link to='/guest'>Guest Checkout</Link> 
+                        <Link to='/register'>Register and Checkout</Link>
+                        <Link tp='/login'>Or Login to Checkout</Link>
                     </div>
                 : ''}
                 {cart.map((item, i) => (
