@@ -4,6 +4,7 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import Cookies from 'js-cookie';
 
 import Homepage from './components/homepage';
 import Cart from './components/cart';
@@ -16,7 +17,6 @@ class App extends React.Component {
     super();
     this.state = {
       loggedIn: false,
-      user: null,
       cart: []
     }
   }
@@ -37,6 +37,17 @@ class App extends React.Component {
       cart: items
     })
   }
+  userLogin = () => {
+    this.setState({
+      loggedIn: true
+    })
+  }
+  userLogOut = () => {
+    Cookies.remove('login');
+    this.setState({
+      loggedIn: false
+    })
+  }
   render() {
     return (
       <Router>
@@ -51,7 +62,7 @@ class App extends React.Component {
             <Register cart={this.state.cart}/>
           </Route>
           <Route path='/login'>
-            <Login/>
+            <Login login={this.userLogin}/>
           </Route>
           <Route path='/'>
             <Homepage addToCart={this.addToCart} cartLength={this.state.cart.length}/>
