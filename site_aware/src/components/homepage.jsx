@@ -3,6 +3,7 @@ import React from 'react';
 import {getDepartments} from '../server/departments';
 import {getItemsByDept} from '../server/items';
 import Item from './item';
+import { Link } from 'react-router-dom';
 
 export default class Homepage extends React.Component {
     constructor() {
@@ -28,7 +29,10 @@ export default class Homepage extends React.Component {
     render() {
         return (
             <div>
-                <h1>Site Aware Super Market</h1>
+                <div className='d-flex justify-content-around'>
+                    <h1>Site Aware Super Market</h1>
+                    <Link to='/cart'>Cart {this.props.cartLength} items</Link>
+                </div>
                 <div className='row'>
                     <div className='col-3'>
                         <h3>Departments:</h3>
