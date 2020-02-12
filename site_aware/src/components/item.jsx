@@ -5,6 +5,7 @@ export default class Item extends React.Component {
         super();
         this.state = {
             weight: '',
+            quantity: '',
             comment: ''
         }
     }
@@ -15,7 +16,8 @@ export default class Item extends React.Component {
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        const item = {id: e.target.id, weight: this.state.weight, comment: this.state.comment};
+        const total = this.state.weight * this.state.quantity * this.props.unit_price;
+        const item = {id: e.target.id, label: this.props.label, total: total, weight: this.state.weight, quantity: this.state.quantity, comment: this.state.comment};
         this.props.addToCart(item)
     }
     render() {
@@ -27,7 +29,9 @@ export default class Item extends React.Component {
                 <div>
                     <form id={id} onSubmit={this.handleSubmit}>
                         <label>Weight:</label>
-                        <input type='number' name='weight' step="0.1" onBlur={this.handleInput}/>
+                        <input type='number' name='weight' step="0.1" onBlur={this.handleInput} required/>
+                        <label>Quantity:</label>
+                        <input type='number' name='quantity' onBlur={this.handleInput} required/>
                         <label>Comments:</label>
                         <input type='textarea' name='comment' onBlur={this.handleInput}/>
                         <input type='submit'/>
