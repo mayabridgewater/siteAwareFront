@@ -2,12 +2,12 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 
 import Homepage from './components/homepage';
 import Cart from './components/cart';
+import GuestCheckout from './components/guestCheckout';
 
 class App extends React.Component {
   constructor() {
@@ -25,17 +25,25 @@ class App extends React.Component {
     })
   }
   deleteFromCart = (id) => {
-      const cart = this.state.cart.filter(item => item.id != id);
+      const cart = this.state.cart.filter(item => item.id !== id);
       this.setState({
         cart
       })
+  }
+  updateCart = (items) => {
+    this.setState({
+      cart: items
+    })
   }
   render() {
     return (
       <Router>
         <Switch>
           <Route path='/cart'>
-            <Cart cart={this.state.cart} delete={this.deleteFromCart}/>
+            <Cart cart={this.state.cart} delete={this.deleteFromCart} update={this.updateCart}/>
+          </Route>
+          <Route path='/guest'>
+            <GuestCheckout cart={this.state.cart}/>
           </Route>
           <Route path='/'>
             <Homepage addToCart={this.addToCart} cartLength={this.state.cart.length}/>
