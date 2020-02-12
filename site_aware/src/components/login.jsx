@@ -1,4 +1,5 @@
 import React from 'react';
+import Cookies from 'js-cookie'
 
 import {login} from '../server/user';
 
@@ -7,7 +8,8 @@ export default class Login extends React.Component {
         super();
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            error: false
         }
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -20,10 +22,17 @@ export default class Login extends React.Component {
         e.preventDefault();
         const data = {email: this.state.email, password: this.state.password};
         const user = await login(data);
+        if (user) {
+            this.props.login();
+            window.location.replace('/') //FIX
+        }else {
+            this.setState({
+                error: true
+            })
+        }
 
     }
     render() {
-        console.log(JSON.parse(document.cookie))
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
@@ -35,6 +44,7 @@ export default class Login extends React.Component {
 
                     <input type='submit'/>
                 </form>
+                {this.state.error && <p>User Not Found</p>}
             </div>
         )
     }
