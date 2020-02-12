@@ -32,6 +32,7 @@ export default class Homepage extends React.Component {
                 <div className='d-flex justify-content-around'>
                     <h1>Site Aware Super Market</h1>
                     <Link to='/cart'>Cart {this.props.cartLength} items</Link>
+                    <Link to='/login'>Login to Checkout</Link>
                 </div>
                 <div className='row'>
                     <div className='col-3'>
