@@ -12,11 +12,17 @@ async function registerCheckout(user) {
 
 async function login(user) {
     const loggedIn = await fetcher.post(`/user/login`, user);
-    console.log(loggedIn.data);
-    console.log(loggedIn)
+    return loggedIn.data
+};
+
+async function getUserInfo(id) {
+    console.log(id)
+    const address = await fetcher.get(`/user/${id}`);
+    console.log(address.data)
 }
 export {
     guestCheckout,
     registerCheckout,
-    login
+    login,
+    getUserInfo
 }

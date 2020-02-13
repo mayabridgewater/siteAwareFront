@@ -1,4 +1,5 @@
 import React from 'react';
+import Cookies from 'js-cookie';
 
 import {getDepartments} from '../server/departments';
 import {getItemsByDept} from '../server/items';
@@ -10,11 +11,17 @@ export default class Homepage extends React.Component {
         super();
         this.state = {
             departments: [],
-            items: []
+            items: [],
+            loggedIn: false
         }
         this.showItems = this.showItems.bind(this)
     }
     async componentDidMount() {
+        if (Cookies.get('login')) {
+            this.setState({
+                loggedIn: true
+            })
+        }
         const departments = await getDepartments();
         this.setState({
             departments
@@ -26,13 +33,22 @@ export default class Homepage extends React.Component {
             items
         })
     }
+    logout = () => {
+        this.props.logout();
+        this.setState({
+            loggedIn: false
+        })
+    } 
     render() {
         return (
             <div>
                 <div className='d-flex justify-content-around'>
                     <h1>Site Aware Super Market</h1>
                     <Link to='/cart'>Cart {this.props.cartLength} items</Link>
-                    <Link to='/login'>Login to Checkout</Link>
+                    {this.state.loggedIn ? 
+                    <p onClick={this.logout}>Log Out</p>
+                    :
+                    <Link to='/login'>Login to Checkout</Link>}
                 </div>
                 <div className='row'>
                     <div className='col-3'>
