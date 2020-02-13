@@ -22,7 +22,7 @@ export default class Login extends React.Component {
         e.preventDefault();
         const data = {email: this.state.email, password: this.state.password};
         const user = await login(data);
-        if (user) {
+        if (user.length > 0) {
             this.props.login();
             window.location.replace('/') //FIX
         }else {

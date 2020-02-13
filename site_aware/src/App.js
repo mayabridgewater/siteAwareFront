@@ -20,6 +20,13 @@ class App extends React.Component {
       cart: []
     }
   }
+  componentDidMount() {
+    if (Cookies.get('login')) {
+      this.setState({
+        loggedIn: true
+      })
+    }
+  }
   addToCart = (item) => {
     this.setState({
       cart: [...this.state.cart,
@@ -53,7 +60,7 @@ class App extends React.Component {
       <Router>
         <Switch>
           <Route path='/cart'>
-            <Cart cart={this.state.cart} delete={this.deleteFromCart} update={this.updateCart}/>
+            <Cart cart={this.state.cart} delete={this.deleteFromCart} update={this.updateCart} user={this.state.loggedIn}/>
           </Route>
           <Route path='/guest'>
             <GuestCheckout cart={this.state.cart}/>
@@ -65,7 +72,7 @@ class App extends React.Component {
             <Login login={this.userLogin}/>
           </Route>
           <Route path='/'>
-            <Homepage addToCart={this.addToCart} cartLength={this.state.cart.length}/>
+            <Homepage addToCart={this.addToCart} cartLength={this.state.cart.length} logout={this.userLogOut}/>
           </Route>
         </Switch>
       </Router>

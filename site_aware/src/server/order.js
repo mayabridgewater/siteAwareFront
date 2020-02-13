@@ -5,6 +5,12 @@ async function placeOrder(order) {
     return makeOrder.data
 };
 
+async function previousOrders(id) {
+    const orders = await axios.get(`http://localhost:3000/order/${id}`);
+    console.log(orders.data)
+}
+
 export {
-    placeOrder
+    placeOrder,
+    previousOrders
 }
