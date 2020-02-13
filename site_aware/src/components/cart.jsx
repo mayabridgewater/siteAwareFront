@@ -52,6 +52,8 @@ export default class Cart extends React.Component {
     handleInput = ({target: {name, value}}) => {
         let newItem = this.state.items.find(item => item.id === this.state.edit);
         newItem[name] = value;
+        const price = newItem.weight * newItem.quantity * newItem.price;
+        newItem.total = price;
         const newItems = this.state.items.filter(item => item.id !== this.state.edit);
         newItems.push(newItem);
         this.setState({
@@ -60,9 +62,14 @@ export default class Cart extends React.Component {
     }
     handleSubmit = (e) => {
         e.preventDefault();
+        let total = 0;
+        for (let i = 0; i < this.state.items.length; i++) {
+            total += this.state.items[i].total
+        }
         this.props.update(this.state.items);
         this.setState({
-            edit: -1
+            edit: -1,
+            total
         }, () => this.props.update(this.state.items))
     }
     chooseAddress = (id) => {
@@ -83,6 +90,7 @@ export default class Cart extends React.Component {
     }
     render() {
         const {cart} = this.props;
+        console.log(this.state.items)
         return (
             <div>
                 {cart.length === 0 && 

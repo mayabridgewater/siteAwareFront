@@ -17,7 +17,7 @@ export default class Item extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
         const total = this.state.weight * this.state.quantity * this.props.unit_price;
-        const item = {id: e.target.id, label: this.props.label, total: total, weight: this.state.weight, quantity: this.state.quantity, comment: this.state.comment};
+        const item = {id: e.target.id, label: this.props.label, total: total, price: this.props.unit_price, weight: this.state.weight, quantity: this.state.quantity, comment: this.state.comment};
         this.props.addToCart(item)
     }
     render() {

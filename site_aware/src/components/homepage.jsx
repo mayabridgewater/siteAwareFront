@@ -54,7 +54,7 @@ export default class Homepage extends React.Component {
                     <div className='col-3'>
                         <h3>Departments:</h3>
                         {this.state.departments.map((dept, d) => (
-                            <p key={d} onClick={() => this.showItems(dept.id)}>{dept.label}</p>
+                            <p key={d} style={{cursor: 'pointer'}} onClick={() => this.showItems(dept.id)}>{dept.label}</p>
                         ))}
                     </div>
                     <div className='col-9'>
