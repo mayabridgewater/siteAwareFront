@@ -37,7 +37,7 @@ export default class GuestCheckout extends React.Component {
         }
         const user = await guestCheckout(guest);
         const order = {user_id: user.user_id, usr_details_id: user.id, total: total, items: this.props.cart};
-        const ordered = await placeOrder(order);
+        await placeOrder(order);
         this.setState({
             ordered: true
         })

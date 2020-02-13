@@ -34,7 +34,7 @@ export default class Cart extends React.Component {
             })
         }
         this.setState({
-            total
+            total: total.toFixed(2)
         })
     }
     edit = (id) => {
@@ -42,8 +42,15 @@ export default class Cart extends React.Component {
             edit: id
         })
     }
+    delete = (id, total) => {
+        this.props.delete(id);
+        const price = this.state.total - total;
+        this.setState({
+            total: price.toFixed(2)
+        })
+    }
     handleInput = ({target: {name, value}}) => {
-        let newItem = this.state.items.find(item => item.id = this.state.edit);
+        let newItem = this.state.items.find(item => item.id === this.state.edit);
         newItem[name] = value;
         const newItems = this.state.items.filter(item => item.id !== this.state.edit);
         newItems.push(newItem);
@@ -56,7 +63,7 @@ export default class Cart extends React.Component {
         this.props.update(this.state.items);
         this.setState({
             edit: -1
-        })
+        }, () => this.props.update(this.state.items))
     }
     chooseAddress = (id) => {
         const address = this.state.address.find(item => item.id === id);
@@ -71,11 +78,10 @@ export default class Cart extends React.Component {
         order.user_id = this.state.address[0].user_id;
         order.usr_details_id = this.state.address[0].usr_detail_id;
         order.total = this.state.total;
-        const results = await placeOrder(order);
+        await placeOrder(order);
         window.location.replace('/')
     }
     render() {
-        console.log(this.state.previous)
         const {cart} = this.props;
         return (
             <div>
@@ -93,37 +99,39 @@ export default class Cart extends React.Component {
                         </div>
                             :
                         <div>
-                            <Link to='/guest'>Guest Checkout</Link> 
-                            <Link to='/register'>Register and Checkout</Link>
+                            <Link to='/guest'><p>Guest Checkout</p></Link> 
+                            <Link to='/register'><p>Register and Checkout</p></Link>
                         </div>
                         }
                     </div>
                 : ''}
-                {cart.map((item, i) => (
-                    <div key={i}>
-                        <h3>{item.label}</h3>
-                        {this.state.edit === item.id ? 
-                            <form id={item.id} onSubmit={this.handleSubmit}> 
-                                <label>Weight:</label>
-                                <input type='number' name='weight' step="0.1" defaultValue={item.weight} onBlur={this.handleInput} required/>
-                                <label>Quantity:</label>
-                                <input type='number' name='quantity' defaultValue={item.quantity} onBlur={this.handleInput} required/>
-                                <label>Comments:</label>
-                                <input type='textarea' name='comment' defaultValue={item.comment} onBlur={this.handleInput}/>
-                                <input type='submit'/>
-                            </form>
-                        :
-                        <div>
-                            <p>Weight: {item.weight}</p>
-                            <p>Quantity: {item.quantity}</p>
-                            <p>Comments: {item.comment}</p>
-                            <p>Total: {item.total}</p>
-                            <button onClick={() => this.props.delete(item.id)}>Delete</button>
-                            <button onClick={() => this.edit(item.id)}>Edit</button>
-                        </div>
-                        }
-                    </div>
-                ))}
+                <div className='row'>
+                    {cart.map((item, i) => (
+                        <div className='col' key={i}>
+                            <h3>{item.label}</h3>
+                            {this.state.edit === item.id ? 
+                                <form id={item.id} onSubmit={this.handleSubmit}> 
+                                    <label>Weight:</label>
+                                    <input type='number' name='weight' step="0.1" defaultValue={item.weight} onChange={this.handleInput} required/>
+                                    <label>Quantity:</label>
+                                    <input type='number' name='quantity' defaultValue={item.quantity} onChange={this.handleInput} required/>
+                                    <label>Comments:</label>
+                                    <input type='textarea' name='comment' defaultValue={item.comment} onChange={this.handleInput}/>
+                                    <input type='submit'/>
+                                </form>
+                            :
+                            <div>
+                                <p>Weight: {item.weight}</p>
+                                <p>Quantity: {item.quantity}</p>
+                                <p>Comments: {item.comment}</p>
+                                <p>Total: {item.total}</p>
+                                <button onClick={() => this.delete(item.id, item.total)}>Delete</button>
+                                <button onClick={() => this.edit(item.id)}>Edit</button>
+                            </div>
+                            }
+                            </div>
+                    ))}
+                </div>
                 {this.props.user &&
                     <div>
                         <p>Choose your shipping address</p>
@@ -137,7 +145,7 @@ export default class Cart extends React.Component {
                 }
                 {this.props.user ? <p>Your previous orders: </p> : ''}
                 {this.state.previous.map((item, i) => (
-                    <div>
+                    <div key={i}>
                         <p>{item.label}</p>
                         <p>{item.total_price}</p>
                     </div>

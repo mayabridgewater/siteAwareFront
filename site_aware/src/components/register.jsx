@@ -45,7 +45,7 @@ export default class Register extends React.Component {
             })
         }else {
             const order = {user_id: user[0][0].user_id, usr_details_id: user[0][0].id, total: total, items: this.props.cart};
-            const ordered = await placeOrder(order);
+            await placeOrder(order);
             this.setState({
                 ordered: true
             })
