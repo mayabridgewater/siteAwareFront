@@ -1,7 +1,7 @@
 import React from 'react';
-import Cookies from 'js-cookie'
 
 import {login} from '../server/user';
+import { Link } from 'react-router-dom';
 
 export default class Login extends React.Component {
     constructor() {
@@ -24,7 +24,7 @@ export default class Login extends React.Component {
         const user = await login(data);
         if (user.length > 0) {
             this.props.login();
-            window.location.replace('/') //FIX
+            window.location.replace('/')
         }else {
             this.setState({
                 error: true
@@ -44,6 +44,7 @@ export default class Login extends React.Component {
 
                     <input type='submit'/>
                 </form>
+                <Link to='/'>Home</Link>
                 {this.state.error && <p>User Not Found</p>}
             </div>
         )

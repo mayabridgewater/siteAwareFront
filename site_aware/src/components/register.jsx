@@ -2,6 +2,7 @@ import React from 'react';
 
 import {registerCheckout} from '../server/user';
 import {placeOrder} from '../server/order';
+import { Link } from 'react-router-dom';
 
 export default class Register extends React.Component {
     constructor() {
@@ -14,7 +15,8 @@ export default class Register extends React.Component {
             address: '',
             city: '',
             phone: '',
-            ordered: false
+            ordered: false,
+            error: false
         }
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -37,11 +39,17 @@ export default class Register extends React.Component {
             total += this.props.cart[i].total
         }
         const user = await registerCheckout(guest);
-        const order = {user_id: user.user_id, usr_details_id: user.id, total: total, items: this.props.cart};
-        const ordered = await placeOrder(order);
-        this.setState({
-            ordered: true
-        })
+        if (user.error) {
+            this.setState({
+                error: true
+            })
+        }else {
+            const order = {user_id: user[0][0].user_id, usr_details_id: user[0][0].id, total: total, items: this.props.cart};
+            await placeOrder(order);
+            this.setState({
+                ordered: true
+            })
+        }
     }
     render() {
         return(
@@ -50,6 +58,7 @@ export default class Register extends React.Component {
                 <div>
                  <h2>You are now registered!</h2>
                  <h2>Thank you for your order!</h2>
+                 <Link to='/'>Home</Link>
                 </div>
                  :
                 <form onSubmit={this.handleSubmit}>
@@ -74,6 +83,7 @@ export default class Register extends React.Component {
                     <label>Phone:</label>
                     <input type='text' name='phone' onChange={this.handleInput}/>
 
+                    {this.state.error ? <p>User already exists</p> : ''}
                     <input type='submit'/>
                 </form>
                 }

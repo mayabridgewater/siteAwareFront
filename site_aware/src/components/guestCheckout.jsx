@@ -2,6 +2,7 @@ import React from 'react';
 
 import {guestCheckout} from '../server/user';
 import {placeOrder} from '../server/order';
+import { Link } from 'react-router-dom';
 
 export default class GuestCheckout extends React.Component {
     constructor() {
@@ -36,7 +37,7 @@ export default class GuestCheckout extends React.Component {
         }
         const user = await guestCheckout(guest);
         const order = {user_id: user.user_id, usr_details_id: user.id, total: total, items: this.props.cart};
-        const ordered = await placeOrder(order);
+        await placeOrder(order);
         this.setState({
             ordered: true
         })
@@ -45,7 +46,10 @@ export default class GuestCheckout extends React.Component {
         return(
             <div>
                 {this.state.ordered ?
-                 <h2>Thank you for your order!</h2>
+                <div>
+                    <h2>Thank you for your order!</h2>
+                    <Link to='/'>Home</Link>
+                </div>
                  :
                 <form onSubmit={this.handleSubmit}>
                     <label>First Name:</label>
