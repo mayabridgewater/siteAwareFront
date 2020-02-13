@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-import {previousOrders} from '../server/order';
+import {previousOrders, placeOrder} from '../server/order';
 import {getUserInfo} from '../server/user';
 
 export default class Cart extends React.Component {
@@ -13,8 +13,11 @@ export default class Cart extends React.Component {
             total: '',
             items: this.props.cart,
             previous: [],
-            address: []
+            address: [],
+            shippingAddress: null,
+            choosen: -1
         }
+        this.loginCheckout = this.loginCheckout.bind(this)
     }
     async componentDidMount() {
         let total = 0;
@@ -23,9 +26,12 @@ export default class Cart extends React.Component {
         }
         if (this.props.user) {
             const id = JSON.parse(Cookies.get('login')).id;
-            console.log(id)
-            // const previous = await previousOrders(id);
+            const previous = await previousOrders(id);
             const address = await getUserInfo(id);
+            this.setState({
+                previous,
+                address
+            })
         }
         this.setState({
             total
@@ -52,7 +58,24 @@ export default class Cart extends React.Component {
             edit: -1
         })
     }
+    chooseAddress = (id) => {
+        const address = this.state.address.find(item => item.id === id);
+        this.setState({
+            shippingAddress: address,
+            choosen: id
+        })
+    }
+    async loginCheckout() {
+        let order = {};
+        order.items = Object.assign(this.state.items);
+        order.user_id = this.state.address[0].user_id;
+        order.usr_details_id = this.state.address[0].usr_detail_id;
+        order.total = this.state.total;
+        const results = await placeOrder(order);
+        window.location.replace('/')
+    }
     render() {
+        console.log(this.state.previous)
         const {cart} = this.props;
         return (
             <div>
@@ -66,7 +89,7 @@ export default class Cart extends React.Component {
                         <p>Total: {this.state.total}</p>
                         {this.props.user ? 
                         <div>
-                            <p>Checkout</p>
+                            <p onClick={this.loginCheckout} style={{cursor: 'pointer'}}>Checkout</p>
                         </div>
                             :
                         <div>
@@ -99,12 +122,24 @@ export default class Cart extends React.Component {
                             <button onClick={() => this.edit(item.id)}>Edit</button>
                         </div>
                         }
-                        {this.props.user &&
-                        <div>
-                            <p>Choose your shipping address</p>
-
-                        </div>
-                        }
+                    </div>
+                ))}
+                {this.props.user &&
+                    <div>
+                        <p>Choose your shipping address</p>
+                        {this.state.address.map((item, i) => (
+                            <div id={item.id} key={i} onClick={() => this.chooseAddress(item.id)} style={this.state.choosen === item.id ? {border: '1px solid blue'} : {border: '1px solid'}}>
+                                <p>{item.address}</p>
+                                <p>{item.city}</p>
+                            </div> 
+                        ))}
+                    </div>
+                }
+                {this.props.user ? <p>Your previous orders: </p> : ''}
+                {this.state.previous.map((item, i) => (
+                    <div>
+                        <p>{item.label}</p>
+                        <p>{item.total_price}</p>
                     </div>
                 ))}
             </div>

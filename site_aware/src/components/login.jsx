@@ -24,7 +24,7 @@ export default class Login extends React.Component {
         const user = await login(data);
         if (user.length > 0) {
             this.props.login();
-            window.location.replace('/') //FIX
+            window.location.replace('/')
         }else {
             this.setState({
                 error: true
