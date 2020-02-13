@@ -90,7 +90,6 @@ export default class Cart extends React.Component {
     }
     render() {
         const {cart} = this.props;
-        console.log(this.state.items)
         return (
             <div>
                 {cart.length === 0 && 
